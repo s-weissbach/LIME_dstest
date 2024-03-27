@@ -32,5 +32,11 @@ Execute the script with the desired command-line arguments. Below are the availa
 Example useage:
 
 ```bash
-python coco_processor.py --coco_path /path/to/coco_dataset.json --export_path /path/to/exported_annotations.json
+python process_coco.py --coco_path /path/to/coco_dataset.json --export_path /path/to/exported_annotations.json
 ```
+
+
+
+The COCO dict will be processed according to this pipeline
+
+<img title="correlation" src="graphics/pipeline.png" alt="correlation raw amplitudes to denoised amplitutes" width="420">
