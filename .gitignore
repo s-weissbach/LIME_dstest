@@ -1,5 +1,6 @@
 # data
-data/*
+annotations/*
+annotations_trainval2017.zip
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
