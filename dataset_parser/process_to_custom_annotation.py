@@ -76,6 +76,12 @@ def process_coco_annotation(
         # check if annotation matches selected super-category
         if annotation["category_id"] != category_annotation["id"]:
             continue
+        # check if coco annotation is consistent
+        if len(annotation["keypoints"]) != n_features * len(encoding):
+            print(
+                f"WARNING: Skipped annotation {annotation['id']} because it had of missing keypoints (found: {len(annotation['keypoints'])}, expected: {n_features * len(encoding)}). Potentially file corrupted."
+            )
+            continue
         # parse copy-paste annotations
         annotation_entry = {
             "image_id": annotation["image_id"],
