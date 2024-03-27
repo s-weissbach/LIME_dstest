@@ -25,44 +25,13 @@ def process_coco_annotation(
     Returns:
         dict: Custom annotation dictionary containing processed annotations.
     """
-    # validate coco dict
-    # base required structure
-    coco_base_keys = ["info", "licenses", "images", "annotations", "categories"]
-    if any([not key in coco_dict.keys() for key in coco_base_keys]):
-        for key in coco_base_keys:
-            if key in coco_dict.keys():
-                continue
-            raise KeyError(
-                f"Did not found {key} in provided coco_dict. Please ensure coco file format"
-            )
-    # check if annotation is not-empty
-    if len(coco_dict["annotations"]) == 0:
-        raise ValueError("No annotations found in the provided coco_dict.")
-    # check if keypoints available for selected supercategory in coco dict
-    if not any(
-        [
-            category["supercategory"] == supercategory
-            for category in coco_dict["categories"]
-        ]
-    ):
-        raise NotImplementedError(
-            f"The selected supercategory {supercategory} is not annotated in the provided coco file."
-        )
     # parse category part
     for category in coco_dict["categories"]:
         if category["supercategory"] != supercategory:
             continue
         category_annotation = category
         break
-    # check if annotations match desired encoding
-    # keypoints have length = n_features * len(encoding)
-
     n_features = len(category_annotation["keypoints"])
-    if not n_features * len(encoding) == len(coco_dict["annotations"][0]["keypoints"]):
-        raise ValueError(
-            f"You selected {len(encoding)} cordinates/features ({encoding}). The annotation must have {len(coco_dict['annotations'][0]['keypoints']) // n_features } cordinates/features."
-        )
-
     # initalize custom annotation dict
     annotation_dict = {"annotations": []}
     # copy-paste image-info, licence and info
@@ -78,9 +47,6 @@ def process_coco_annotation(
             continue
         # check if coco annotation is consistent
         if len(annotation["keypoints"]) != n_features * len(encoding):
-            print(
-                f"WARNING: Skipped annotation {annotation['id']} because it had of missing keypoints (found: {len(annotation['keypoints'])}, expected: {n_features * len(encoding)}). Potentially file corrupted."
-            )
             continue
         # parse copy-paste annotations
         annotation_entry = {
