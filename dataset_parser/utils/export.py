@@ -25,18 +25,16 @@ def json_export(annotation_dict: dict, path: str, overwrite: bool = False) -> No
     directory = os.path.dirname(path)
     # Ensure existence of directory
     directory = os.path.dirname(path)
-    try:
+    if os.path.exists(directory):
+        try:
+            os.makedirs(directory)
+        except PermissionError:
+            raise PermissionError(f"Permission denied to create directory: {directory}")
         print(f"Directory ({directory}) did not exists and was created.")
-        os.makedirs(directory)
-    except FileExistsError:
-        # Directory already exists, no action needed
-        pass
-    except PermissionError:
-        raise PermissionError(f"Permission denied to create directory: {directory}")
     # check if file exists
     if os.path.exists(path) and not overwrite:
         raise FileExistsError(
-            f"File {path} already exists. Use overwrite=True, to overwrite this file."
+            f"File {path} already exists. Use --overwrite=True, to overwrite this file."
         )
     # dump file into json
     with open(path, "w") as f:

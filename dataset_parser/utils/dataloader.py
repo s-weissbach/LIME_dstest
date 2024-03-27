@@ -2,7 +2,7 @@ import json
 import os
 
 
-def json_coco(path: str) -> dict:
+def load_json_coco(path: str) -> dict:
     """
     Load COCO dictionary from a JSON file.
 
